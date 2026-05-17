@@ -1,125 +1,137 @@
-import type { ReactNode } from 'react'
 import Link from 'next/link'
-import { Instagram } from 'lucide-react'
+import { FileText, ArrowRight } from 'lucide-react'
 import { SITE_CONFIG } from '@/lib/site-config'
-import { siteIdentity } from '@/config/site.identity'
+import { siteContent } from '@/config/site.content'
+import { fetchTaskPosts } from '@/lib/task-data'
+import { CATEGORY_OPTIONS, normalizeCategory } from '@/lib/categories'
 
 export const FOOTER_OVERRIDE_ENABLED = true
 
-const primaryTask = SITE_CONFIG.tasks.find((t) => t.enabled) || SITE_CONFIG.tasks[0]
+const columns = [
+  {
+    title: 'Product',
+    links: [
+      { label: 'Press releases', href: '/updates' },
+      { label: 'Submit a release', href: '/create/mediaDistribution' },
+      { label: 'Search', href: '/search' },
+    ],
+  },
+  {
+    title: 'Company',
+    links: [
+      { label: 'About', href: '/about' },
+      { label: 'Contact', href: '/contact' },
+      { label: 'Press room', href: '/press' },
+    ],
+  },
+  {
+    title: 'Resources',
+    links: [
+      { label: 'Privacy', href: '/privacy' },
+      { label: 'Terms', href: '/terms' },
+      { label: 'Cookies', href: '/cookies' },
+    ],
+  },
+]
 
-function SocialIcon({ href, label, children }: { href: string; label: string; children: ReactNode }) {
-  return (
-    <Link
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-zinc-200 transition hover:border-lime-400/60 hover:text-lime-300"
-    >
-      {children}
-    </Link>
-  )
+const getCategoryLabel = (value: string) => {
+  const normalized = normalizeCategory(value)
+  return CATEGORY_OPTIONS.find((item) => item.slug === normalized)?.name || value
 }
 
-export function FooterOverride() {
-  const domain = siteIdentity.domain
-  const infoEmail = `info@${domain}`
-  const pressEmail = `press@${domain}`
+export async function FooterOverride() {
+  const primary = SITE_CONFIG.tasks.find((t) => t.enabled) || SITE_CONFIG.tasks[0]
+  const posts = await fetchTaskPosts('mediaDistribution', 200, { allowMockFallback: false })
+  const categories = Array.from(
+    new Map(
+      posts
+        .map((post) => {
+          const content = post.content && typeof post.content === 'object' ? (post.content as Record<string, unknown>) : {}
+          const raw = typeof content.category === 'string' ? content.category.trim() : ''
+          if (!raw) return null
+          const slug = normalizeCategory(raw)
+          return {
+            slug,
+            name: getCategoryLabel(raw),
+          }
+        })
+        .filter((item): item is { slug: string; name: string } => Boolean(item))
+        .map((item) => [item.slug, item])
+    ).values()
+  ).slice(0, 8)
 
   return (
-    <footer className="border-t border-white/10 bg-[#05060a] text-white">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
+    <footer className="border-t border-white/10 bg-[linear-gradient(180deg,#04004a_0%,#1c045d_48%,#0f0238_100%)] text-white">
+      <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
+        <div className="grid gap-10 lg:grid-cols-[1.2fr_1fr_1fr_1fr]">
           <div>
-            <h2 className="max-w-xl text-2xl font-black uppercase leading-tight tracking-tight text-white sm:text-3xl">
-              Maximizing reach for independent reporting and syndicated articles.
-            </h2>
-            <div className="mt-8 max-w-md rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-              <p className="text-sm font-semibold text-zinc-200">Become a distribution partner</p>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-                Pitch your desk, licensing model, or regional bundle. We reply within two business days.
-              </p>
-              <Link
-                href="/contact"
-                className="mt-5 inline-flex rounded-full bg-lime-400 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-zinc-950 hover:bg-lime-300"
-              >
-                Contact us
-              </Link>
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-2xl border border-white/15 bg-white/10">
+                <span className="font-[family-name:var(--font-display)] text-xl font-semibold text-[#f3c5ff]">{SITE_CONFIG.name.slice(0, 1).toLowerCase()}</span>
+              </span>
+              <div>
+                <p className="font-[family-name:var(--font-display)] text-xl font-semibold">{SITE_CONFIG.name}</p>
+                <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#f3c5ff]/80">{siteContent.footer.tagline}</p>
+              </div>
             </div>
+            <p className="mt-5 max-w-sm text-sm leading-relaxed text-white/65">{SITE_CONFIG.description}</p>
+            {primary ? (
+              <Link
+                href={primary.route}
+                className="mt-6 inline-flex items-center gap-2 rounded-full bg-[#f3c5ff] px-4 py-2.5 text-sm font-semibold text-[#04004a] transition hover:bg-white"
+              >
+                <FileText className="h-4 w-4" />
+                Browse {primary.label}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            ) : null}
           </div>
-
-          <div className="flex flex-col gap-8 lg:items-end lg:text-right">
-            <div className="space-y-2 text-sm text-zinc-400">
-              <p>
-                <a href={`mailto:${infoEmail}`} className="text-zinc-200 hover:text-lime-300">
-                  {infoEmail}
-                </a>
-              </p>
-              <p>
-                <a href={`mailto:${pressEmail}`} className="text-zinc-200 hover:text-lime-300">
-                  {pressEmail}
-                </a>
-              </p>
-              <p className="max-w-xs lg:ml-auto">Editorial &amp; distribution — New York desk, remote contributors worldwide.</p>
+          {columns.map((col) => (
+            <div key={col.title}>
+              <h3 className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#f3c5ff]/75">{col.title}</h3>
+              <ul className="mt-5 space-y-3 text-sm">
+                {col.links.map((item) => (
+                  <li key={item.href}>
+                    <Link href={item.href} className="text-white/75 transition hover:text-white">
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
-            <div className="flex flex-wrap gap-3 lg:justify-end">
-              <Link
-                href="/contact"
-                className="rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-white hover:bg-white/10"
-              >
-                Guest post
-              </Link>
-              <Link
-                href={primaryTask?.route || '/archive'}
-                className="rounded-full bg-lime-400 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.1em] text-zinc-950 hover:bg-lime-300"
-              >
-                Read latest
-              </Link>
-            </div>
-          </div>
+          ))}
         </div>
 
-        <div className="mt-14 flex flex-col gap-8 border-t border-white/10 pt-10 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
-            <span className="relative flex h-16 w-16 shrink-0 overflow-hidden rounded-full border border-white/15 bg-[#11131d] ring-1 ring-white/10 sm:h-[4.5rem] sm:w-[4.5rem]">
-              <img
-                src="/favicon.png"
-                alt=""
-                width={72}
-                height={72}
-                className="h-full w-full object-contain p-1.5"
-                decoding="async"
-              />
-            </span>
-            <p className="text-3xl font-black uppercase leading-none tracking-tight text-white sm:text-4xl lg:text-5xl">
-              {SITE_CONFIG.name}
-            </p>
+        {categories.length ? (
+          <div className="mt-10 border-t border-white/10 pt-8">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.28em] text-[#f3c5ff]/75">Categories</h3>
+            <div className="mt-4 flex flex-wrap gap-2">
+              {categories.map((category) => (
+                <Link
+                  key={category.slug}
+                  href={`/updates?category=${category.slug}`}
+                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-xs font-medium text-white/80 transition hover:border-[#f3c5ff]/60 hover:bg-white/10 hover:text-white"
+                >
+                  {category.name}
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className="flex gap-3">
-            <SocialIcon href="https://twitter.com" label="X">
-              <span className="text-xs font-black">𝕏</span>
-            </SocialIcon>
-            <SocialIcon href="https://instagram.com" label="Instagram">
-              <Instagram className="h-4 w-4" />
-            </SocialIcon>
-            <SocialIcon href="https://tiktok.com" label="TikTok">
-              <span className="text-[10px] font-black">TT</span>
-            </SocialIcon>
-          </div>
-        </div>
+        ) : null}
 
-        <div className="mt-10 flex flex-col gap-3 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</p>
+        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-xs text-white/50 sm:flex-row sm:items-center sm:justify-between">
+          <p>
+            &copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.
+          </p>
           <div className="flex flex-wrap gap-4">
-            <Link href="/privacy" className="hover:text-lime-300">
-              Privacy Policy
+            <Link href="/privacy" className="hover:text-white/80">
+              Privacy
             </Link>
-            <Link href="/terms" className="hover:text-lime-300">
+            <Link href="/terms" className="hover:text-white/80">
               Terms
             </Link>
-            <Link href="/cookies" className="hover:text-lime-300">
-              Cookies
+            <Link href="/contact" className="hover:text-white/80">
+              Support
             </Link>
           </div>
         </div>
