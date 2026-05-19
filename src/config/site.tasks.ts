@@ -1,9 +1,9 @@
 export const siteTaskDefinitions = [
   {
     key: 'mediaDistribution',
-    label: 'Archive',
+    label: 'Media Distribution',
     route: '/media-distribution',
-    description: 'Browse every published guest post and desk story.',
+    description: 'Browse distribution results, press releases, and publication reports.',
     contentType: 'mediaDistribution',
     enabled: true,
   },

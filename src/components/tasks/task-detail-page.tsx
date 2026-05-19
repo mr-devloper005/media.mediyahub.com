@@ -33,12 +33,22 @@ type PostContent = {
   highlights?: string[];
   logo?: string;
   images?: string[];
+  image?: string;
+  coverImage?: string;
+  featuredImage?: string;
   latitude?: number | string;
   longitude?: number | string;
 };
 
-const isValidImageUrl = (value?: string | null) =>
-  typeof value === "string" && (value.startsWith("/") || /^https?:\/\//i.test(value));
+const normalizeImageUrl = (value?: string | null) => {
+  if (!value || typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("/")) return trimmed;
+  return `/${trimmed.replace(/^\/+/, "")}`;
+};
+
+const isValidImageUrl = (value?: string | null) => Boolean(normalizeImageUrl(value));
 
 const absoluteUrl = (value?: string | null) => {
   if (!value) return null;
@@ -56,24 +66,31 @@ const formatArticleHtml = (content: PostContent, post: SitePost) => {
   const raw =
     (typeof content.body === "string" && content.body.trim()) ||
     (typeof content.description === "string" && content.description.trim()) ||
+    (typeof content.excerpt === "string" && content.excerpt.trim()) ||
     (typeof post.summary === "string" && post.summary.trim()) ||
     "";
 
-  return formatRichHtml(raw, "Details coming soon.");
+  return formatRichHtml(raw, "");
 };
 
 const getImageUrls = (post: SitePost, content: PostContent) => {
   const media = Array.isArray(post.media) ? post.media : [];
   const mediaImages = media
     .map((item) => item?.url)
-    .filter((url): url is string => isValidImageUrl(url));
+    .map((url) => normalizeImageUrl(url))
+    .filter((url): url is string => Boolean(url));
   const contentImages = Array.isArray(content.images)
-    ? content.images.filter((url): url is string => isValidImageUrl(url))
+    ? content.images
+        .map((url) => normalizeImageUrl(typeof url === "string" ? url : null))
+        .filter((url): url is string => Boolean(url))
     : [];
-  const merged = [...mediaImages, ...contentImages];
+  const singleImage = normalizeImageUrl(
+    content.image || content.coverImage || content.featuredImage || null
+  );
+  const merged = [...mediaImages, ...contentImages, ...(singleImage ? [singleImage] : [])];
   if (merged.length) return merged;
   if (isValidImageUrl(content.logo)) return [content.logo as string];
-  return ["/placeholder.svg?height=900&width=1400"];
+  return [];
 };
 
 const toNumber = (value?: number | string) => {
@@ -141,10 +158,14 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
 
   const content = getContent(post);
   const isClassified = task === "classified";
-  const isArticle = task === "article";
+  const isArticle = task === "article" || task === "mediaDistribution";
   const category = content.category || post.tags?.[0] || taskConfig?.label || task;
-  const description = content.description || post.summary || "Details coming soon.";
-  const descriptionHtml = !isArticle ? formatRichHtml(description, "Details coming soon.") : "";
+  const description =
+    content.description ||
+    (typeof content.excerpt === "string" ? content.excerpt : "") ||
+    post.summary ||
+    "";
+  const descriptionHtml = !isArticle ? formatRichHtml(description, "") : "";
   const articleHtml = isArticle ? formatArticleHtml(content, post) : "";
   const articleSummary =
     post.summary ||
@@ -154,16 +175,10 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
     (typeof content.author === "string" && content.author.trim()) ||
     post.authorName ||
     "Editorial Team";
-  const articleDate = post.publishedAt
-    ? new Date(post.publishedAt).toLocaleDateString("en-IN", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      })
-    : "";
   const postTags = Array.isArray(post.tags) ? post.tags.filter((tag) => typeof tag === "string") : [];
   const location = content.address || content.location;
   const images = getImageUrls(post, content);
+  const hasTaskImage = images.length > 0;
   const mapEmbedUrl = buildMapEmbedUrl(content.latitude, content.longitude, location);
   const isBookmark = task === "sbm" || task === "social";
   const hideSidebar = isClassified || isArticle || task === "image" || isBookmark;
@@ -272,7 +287,6 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
                 </h1>
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm text-muted-foreground">
                   <span>By {articleAuthor}</span>
-                  {articleDate ? <span>{articleDate}</span> : null}
                   <Badge variant="secondary" className="inline-flex items-center gap-1">
                     <Tag className="h-3.5 w-3.5" />
                     {category}
@@ -290,6 +304,7 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
                 {articleSummary ? (
                   <p className="text-base leading-7 text-muted-foreground">{articleSummary}</p>
                 ) : null}
+                {hasTaskImage ? <TaskImageCarousel images={images} /> : null}
                 <RichContent html={articleHtml} className="leading-8 prose-p:my-6 prose-h2:my-8 prose-h3:my-6 prose-ul:my-6" />
                 <ArticleComments slug={post.slug} />
               </div>
@@ -484,6 +499,7 @@ export async function TaskDetailPage({ task, slug }: { task: TaskKey; slug: stri
                   key={item.id}
                   post={item}
                   href={buildPostUrl(task, item.slug)}
+                  taskKey={task}
                 />
               ))}
             </div>

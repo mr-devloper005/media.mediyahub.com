@@ -860,47 +860,47 @@ export const mockApiEndpoints: ApiEndpoint[] = [
 export const mockFaqs: FAQItem[] = [
   {
     id: 'faq-1',
-    question: 'How do I submit a bookmark?',
-    answer: 'Open Social Bookmarks and choose Submit Bookmark to add your link.'
+    question: 'How fast can my press release be published?',
+    answer: 'Most campaigns publish within a few business days after editorial approval and targeting confirmation.'
   },
   {
     id: 'faq-2',
-    question: 'Can I create private collections?',
-    answer: 'Yes. Set your collection to private when creating it.'
+    question: 'Do you provide writing support?',
+    answer: 'Yes. Our editorial team can write or refine your release to meet publication standards.'
   },
   {
     id: 'faq-3',
-    question: 'How do I upgrade plans?',
-    answer: 'Go to Settings, then Billing to manage your subscription.'
+    question: 'Will I receive proof of publication?',
+    answer: 'Yes. Every campaign includes reporting with live links, placement details, and visibility metrics.'
   }
 ]
 
 export const mockBlogPosts: BlogPost[] = [
   {
     id: 'blog-1',
-    title: 'Community Notes: March',
+    title: 'Distribution Wins: Monthly Campaign Highlights',
     date: 'Mar 12, 2026',
-    excerpt: 'Highlights from the community, trending collections, and product updates.',
+    excerpt: 'Top placements, ranking lifts, and campaign insights from this month.',
     tag: 'Updates',
-    author: 'Avery Brooks',
+    author: 'Distribution Desk',
     readTime: '4 min'
   },
   {
     id: 'blog-2',
-    title: 'Designing for Shared Knowledge',
+    title: 'How Press Releases Support AI and SEO Visibility',
     date: 'Feb 28, 2026',
-    excerpt: 'How we think about curation, trust, and discovery in social bookmarking.',
-    tag: 'Design',
-    author: 'Jordan Lee',
+    excerpt: 'Why entity-rich releases and trusted citations improve discovery in answer engines.',
+    tag: 'Strategy',
+    author: 'Editorial Team',
     readTime: '6 min'
   },
   {
     id: 'blog-3',
-    title: 'Building the Social Bookmarking Hub',
+    title: 'Inside a High-Performing Distribution Report',
     date: 'Feb 10, 2026',
-    excerpt: 'A behind-the-scenes look at the new SBM module and its workflows.',
-    tag: 'Product',
-    author: 'Priya Desai',
+    excerpt: 'What to review in publication proofs, backlinks, and post-campaign metrics.',
+    tag: 'Reporting',
+    author: 'Analytics Desk',
     readTime: '5 min'
   }
 ]
@@ -908,20 +908,20 @@ export const mockBlogPosts: BlogPost[] = [
 export const mockPressCoverage: PressCoverage[] = [
   {
     id: 'press-coverage-1',
-    outlet: 'Product Weekly',
-    headline: 'This platform makes link sharing feel premium.',
+    outlet: 'Business Growth Weekly',
+    headline: 'Media Mediyahub helps brands turn press releases into measurable authority.',
     date: 'Mar 2026'
   },
   {
     id: 'press-coverage-2',
-    outlet: 'Design Journal',
-    headline: 'A fresh take on community curation.',
+    outlet: 'Marketing Signals',
+    headline: 'The new standard for distribution reporting and publication proof.',
     date: 'Feb 2026'
   },
   {
     id: 'press-coverage-3',
-    outlet: 'Tech Today',
-    headline: 'Why teams are switching to this platform.',
+    outlet: 'SEO Leaders',
+    headline: 'How strategic media placements can accelerate organic visibility.',
     date: 'Jan 2026'
   }
 ]
