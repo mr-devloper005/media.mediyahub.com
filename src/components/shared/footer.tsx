@@ -28,7 +28,7 @@ const footerLinks = {
   company: [
     { name: 'Team', href: '/team' },
     { name: 'Careers', href: '/careers' },
-    { name: 'Blog', href: '/blog' },
+    // { name: 'Blog', href: '/blog' },
     { name: 'Press', href: '/press' },
   ],
   resources: [

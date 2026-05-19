@@ -36,8 +36,7 @@ export const fetchTaskPosts = async (
 ) => {
   const allowMockFallback =
     options?.allowMockFallback ??
-    (task === "mediaDistribution" ||
-      process.env.NEXT_PUBLIC_USE_MOCK_CONTENT === "true");
+    process.env.NEXT_PUBLIC_USE_MOCK_CONTENT === "true";
   const type = getTaskContentType(task);
   const effectiveRevalidate =
     options?.fresh === true ? undefined : (options?.revalidate ?? 120);
@@ -84,7 +83,6 @@ export const fetchTaskPosts = async (
 
 export const fetchTaskPostBySlug = async (task: TaskKey, slug: string) => {
   const allowMockFallback =
-    task === "mediaDistribution" ||
     process.env.NEXT_PUBLIC_USE_MOCK_CONTENT === "true";
   const type = getTaskContentType(task);
   const resolveFromFeed = (feed: SiteFeed<SitePost> | null) =>
@@ -118,20 +116,34 @@ export const buildPostUrl = (task: TaskKey, slug: string) => {
   return `${view}/${slug}`;
 };
 
-const isValidImageUrl = (value?: string | null) =>
-  typeof value === "string" && (value.startsWith("/") || /^https?:\/\//i.test(value));
+const normalizeImageUrl = (value?: string | null) => {
+  if (!value || typeof value !== "string") return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("/")) return trimmed;
+  return `/${trimmed.replace(/^\/+/, "")}`;
+};
+
+const isValidImageUrl = (value?: string | null) => Boolean(normalizeImageUrl(value));
 
 export const getPostImages = (post: SitePost): string[] => {
   const media = Array.isArray(post.media) ? post.media : [];
   const mediaUrls = media
     .map((item) => item?.url)
-    .filter((url): url is string => isValidImageUrl(url));
+    .map((url) => normalizeImageUrl(url))
+    .filter((url): url is string => Boolean(url));
   const content = post.content && typeof post.content === "object" ? post.content : {};
   const contentAny = content as Record<string, unknown>;
   const contentImage =
     typeof contentAny.image === "string" ? contentAny.image : null;
+  const coverImage =
+    typeof contentAny.coverImage === "string" ? contentAny.coverImage : null;
+  const featuredImage =
+    typeof contentAny.featuredImage === "string" ? contentAny.featuredImage : null;
   const contentImages = Array.isArray(contentAny.images)
-    ? contentAny.images.filter((url): url is string => isValidImageUrl(url))
+    ? contentAny.images
+        .map((url) => normalizeImageUrl(typeof url === "string" ? url : null))
+        .filter((url): url is string => Boolean(url))
     : [];
   const contentLogo =
     typeof contentAny.logo === "string" ? contentAny.logo : null;
@@ -139,7 +151,9 @@ export const getPostImages = (post: SitePost): string[] => {
   return [
     ...mediaUrls,
     ...contentImages,
-    ...(isValidImageUrl(contentImage) ? [contentImage as string] : []),
-    ...(isValidImageUrl(contentLogo) ? [contentLogo as string] : []),
+    ...(normalizeImageUrl(contentImage) ? [normalizeImageUrl(contentImage) as string] : []),
+    ...(normalizeImageUrl(coverImage) ? [normalizeImageUrl(coverImage) as string] : []),
+    ...(normalizeImageUrl(featuredImage) ? [normalizeImageUrl(featuredImage) as string] : []),
+    ...(normalizeImageUrl(contentLogo) ? [normalizeImageUrl(contentLogo) as string] : []),
   ];
 };

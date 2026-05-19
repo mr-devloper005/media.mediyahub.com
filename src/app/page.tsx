@@ -40,6 +40,11 @@ const taskIcons: Record<TaskKey, any> = {
   classified: Tag,
   image: ImageIcon,
   profile: User,
+  social: Globe2,
+  pdf: FileText,
+  org: Building2,
+  comment: FileText,
+  mediaDistribution: FileText,
 }
 
 function resolveTaskKey(value: unknown, fallback: TaskKey): TaskKey {

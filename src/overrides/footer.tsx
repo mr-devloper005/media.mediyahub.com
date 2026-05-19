@@ -1,172 +1,47 @@
-import type { ReactNode } from 'react'
-import Link from 'next/link'
-import { Instagram } from 'lucide-react'
+﻿import Link from 'next/link'
 import { SITE_CONFIG } from '@/lib/site-config'
-import { fetchTaskPosts } from '@/lib/task-data'
-import { CATEGORY_OPTIONS, normalizeCategory } from '@/lib/categories'
-import { siteIdentity } from '@/config/site.identity'
 
 export const FOOTER_OVERRIDE_ENABLED = true
 
-
-const getCategoryLabel = (value: string) => {
-  const normalized = normalizeCategory(value)
-  return CATEGORY_OPTIONS.find((item) => item.slug === normalized)?.name || value
-}
-
-
-const primaryTask = SITE_CONFIG.tasks.find((t) => t.enabled) || SITE_CONFIG.tasks[0]
-
-function SocialIcon({ href, label, children }: { href: string; label: string; children: ReactNode }) {
+export function FooterOverride() {
   return (
-    <Link
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={label}
-      className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 bg-white/5 text-zinc-200 transition hover:border-lime-400/60 hover:text-lime-300"
-    >
-      {children}
-    </Link>
-  )
-}
-
-export async function FooterOverride() {
-  const posts = await fetchTaskPosts('mediaDistribution', 200, { allowMockFallback: false })
-  const categories = Array.from(
-    new Map(
-      posts
-        .map((post) => {
-          const content = post.content && typeof post.content === 'object' ? (post.content as Record<string, unknown>) : {}
-          const raw = typeof content.category === 'string' ? content.category.trim() : ''
-          if (!raw) return null
-          const slug = normalizeCategory(raw)
-          return { slug, name: getCategoryLabel(raw) }
-        })
-        .filter((item): item is { slug: string; name: string } => Boolean(item))
-        .map((item) => [item.slug, item])
-    ).values()
-  ).slice(0, 8)
-
-  const domain = siteIdentity.domain
-  const infoEmail = `info@${domain}`
-  const pressEmail = `press@${domain}`
-
-  return (
-    <footer className="border-t border-white/10 bg-[#05060a] text-white">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[1.1fr_1fr] lg:gap-16">
-          <div>
-            <h2 className="max-w-xl text-2xl font-black uppercase leading-tight tracking-tight text-white sm:text-3xl">
-              Maximizing reach for independent reporting and syndicated articles.
-            </h2>
-            <div className="mt-8 max-w-md rounded-3xl border border-white/10 bg-white/[0.04] p-6">
-              <p className="text-sm font-semibold text-zinc-200">Become a distribution partner</p>
-              <p className="mt-2 text-sm leading-relaxed text-zinc-400">
-                Pitch your desk, licensing model, or regional bundle. We reply within two business days.
-              </p>
-              <Link
-                href="/contact"
-                className="mt-5 inline-flex rounded-full bg-lime-400 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.12em] text-zinc-950 hover:bg-lime-300"
-              >
-                Contact us
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-8 lg:items-end lg:text-right">
-            <div className="space-y-2 text-sm text-zinc-400">
-              <p>
-                <a href={`mailto:${infoEmail}`} className="text-zinc-200 hover:text-lime-300">
-                  {infoEmail}
-                </a>
-              </p>
-              <p>
-                <a href={`mailto:${pressEmail}`} className="text-zinc-200 hover:text-lime-300">
-                  {pressEmail}
-                </a>
-              </p>
-              <p className="max-w-xs lg:ml-auto">Editorial &amp; distribution — New York desk, remote contributors worldwide.</p>
-            </div>
-            <div className="flex flex-wrap gap-3 lg:justify-end">
-              <Link
-                href="/contact"
-                className="rounded-full border border-white/20 px-5 py-2.5 text-xs font-semibold uppercase tracking-[0.12em] text-white hover:bg-white/10"
-              >
-                Guest post
-              </Link>
-              <Link
-                href={primaryTask?.route || '/archive'}
-                className="rounded-full bg-lime-400 px-5 py-2.5 text-xs font-bold uppercase tracking-[0.1em] text-zinc-950 hover:bg-lime-300"
-              >
-                Read latest
-              </Link>
-            </div>
+    <footer className="bg-[#4e16bc] text-white">
+      <div className="mx-auto grid max-w-[1140px] gap-10 px-4 py-12 sm:px-6 lg:grid-cols-3 lg:px-8">
+        <div>
+          <h3 className="text-2xl font-bold">About Us</h3>
+          <p className="mt-3 text-sm leading-relaxed text-white/90">
+            {SITE_CONFIG.name} connects brands with premium global media through strategic distribution, targeted outreach, and measurable reporting.
+          </p>
+          <p className="mt-4 text-lg font-semibold"></p>
+          <div className="mt-2 flex gap-2 text-sm">
+            {/* <span className="rounded-full bg-white/20 px-3 py-1"></span> */}
+            {/* <span className="rounded-full bg-white/20 px-3 py-1"></span> */}
+            {/* <span className="rounded-full bg-white/20 px-3 py-1"></span> */}
           </div>
         </div>
 
-        <div className="mt-14 flex flex-col gap-8 border-t border-white/10 pt-10 sm:flex-row sm:items-end sm:justify-between">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-6">
-            <span className="relative flex h-16 w-16 shrink-0 overflow-hidden rounded-full border border-white/15 bg-[#11131d] ring-1 ring-white/10 sm:h-[4.5rem] sm:w-[4.5rem]">
-              <img
-                src="/favicon.png"
-                alt=""
-                width={72}
-                height={72}
-                className="h-full w-full object-contain p-1.5"
-                decoding="async"
-              />
-            </span>
-            <p className="text-3xl font-black uppercase leading-none tracking-tight text-white sm:text-4xl lg:text-5xl">
-              {SITE_CONFIG.name}
-            </p>
-          </div>
-          <div className="flex gap-3">
-            <SocialIcon href="https://twitter.com" label="X">
-              <span className="text-xs font-black">𝕏</span>
-            </SocialIcon>
-            <SocialIcon href="https://instagram.com" label="Instagram">
-              <Instagram className="h-4 w-4" />
-            </SocialIcon>
-            <SocialIcon href="https://tiktok.com" label="TikTok">
-              <span className="text-[10px] font-black">TT</span>
-            </SocialIcon>
-          </div>
+        <div>
+          <h3 className="text-2xl font-bold">Quick Links</h3>
+          <ul className="mt-3 space-y-2 text-sm">
+            <li><Link href="/about" className="hover:underline">About Us</Link></li>
+            <li><Link href="/contact" className="hover:underline">Contact Us</Link></li>
+            <li><Link href="/careers" className="hover:underline">Careers</Link></li>
+            <li><Link href="/help" className="hover:underline">Help</Link></li>
+            <li><Link href="/terms" className="hover:underline">Terms</Link></li>
+            <li><Link href="/privacy" className="hover:underline">Privacy</Link></li>
+          </ul>
         </div>
 
-
-        {categories.length ? (
-          <div className="mt-8">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] opacity-70">Categories</p>
-            <div className="mt-3 flex flex-wrap gap-3 text-sm">
-              {categories.map((category) => (
-                <Link
-                  key={category.slug}
-                  href={`/updates?category=${category.slug}`}
-                  className="opacity-80 underline-offset-4 transition hover:opacity-100 hover:underline"
-                >
-                  {category.name}
-                </Link>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        <div className="mt-10 flex flex-col gap-3 text-xs text-zinc-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</p>
-          <div className="flex flex-wrap gap-4">
-            <Link href="/privacy" className="hover:text-lime-300">
-              Privacy Policy
-            </Link>
-            <Link href="/terms" className="hover:text-lime-300">
-              Terms
-            </Link>
-            <Link href="/cookies" className="hover:text-lime-300">
-              Cookies
-            </Link>
-          </div>
-        </div>
+        {/* <div>
+          <h3 className="text-2xl font-bold">Contact Us</h3>
+          <ul className="mt-3 space-y-3 text-sm">
+            <li></li>
+            <li></li>
+            <li></li>
+          </ul>
+        </div> */}
       </div>
+      <div className="border-t border-white/20 py-3 text-center text-sm">© {new Date().getFullYear()} {SITE_CONFIG.name}. All rights reserved.</div>
     </footer>
   )
 }
