@@ -1,115 +1,116 @@
-import type { TaskKey } from '@/lib/site-config'
+﻿import type { TaskKey } from '@/lib/site-config'
 
 export const siteContent = {
   navbar: {
-    tagline: 'Independent news desk',
+    tagline: 'Authority-first media distribution',
   },
   footer: {
-    tagline: 'Simple publishing for press-style updates',
+    tagline: 'Press release writing, distribution, and reporting',
   },
   hero: {
-    badge: 'Latest updates',
-    title: ['Clear publishing, simple reading, no extra noise.'],
+    badge: 'Top rated press release service',
+    title: ['Build authority with strategic media distribution.'],
     description:
-      'A minimal article-style publishing template built for regular updates, announcements, and media distribution posts.',
+      'Launch press releases that reach real publications, improve search visibility, and convert trust into growth.',
     primaryCta: {
-      label: 'Browse latest posts',
-      href: '/archive',
+      label: 'See packages',
+      href: '/media-distribution',
     },
     secondaryCta: {
-      label: 'Contact us',
+      label: 'Talk to our team',
       href: '/contact',
     },
-    searchPlaceholder: 'Search posts',
-    focusLabel: 'Latest',
-    featureCardBadge: 'editor note',
-    featureCardTitle: 'Recent updates appear directly on the homepage.',
+    searchPlaceholder: 'Search releases, reports, and coverage',
+    focusLabel: 'Latest release',
+    featureCardBadge: 'distribution insight',
+    featureCardTitle: 'Track live placements, backlinks, and reach in one report.',
     featureCardDescription:
-      'The homepage works as a clean front page so new posts stay visible without decorative sections getting in the way.',
+      'Every campaign includes transparent reporting so you can verify publication links, rankings, and performance outcomes.',
   },
   home: {
     metadata: {
-      title: 'Latest updates and newsroom posts',
+      title: 'Press Release Distribution for Authority and SEO',
       description:
-        'Read the latest updates, announcements, and stories through a simple archive-first publishing experience.',
-      openGraphTitle: 'Latest updates and newsroom posts',
+        'Media Mediyahub distributes press releases to trusted news outlets with SEO-focused publishing, verified placements, and actionable reporting.',
+      openGraphTitle: 'Media Distribution That Builds Authority',
       openGraphDescription:
-        'A simple publishing template for updates, announcements, and readable article pages.',
-      keywords: ['newsroom posts', 'latest updates', 'announcements', 'press articles'],
+        'Write, publish, verify, and grow with a complete press release distribution workflow built for modern brands.',
+      keywords: ['press release distribution', 'media distribution service', 'newswire publishing', 'seo backlinks', 'brand authority'],
     },
-    introBadge: 'Desk',
-    introTitle: 'A quiet publishing template made for regular updates.',
+    introBadge: 'Media Distribution',
+    introTitle: 'From story draft to verified publication in one workflow.',
     introParagraphs: [
-      'This template is designed for sites that publish straightforward updates and want the homepage to behave like a clean front page rather than a product landing page.',
-      'Posts are visible immediately, archives stay easy to scan, and the reading page keeps the focus on the article itself.',
-      'The interface is intentionally simple so the site feels usable, familiar, and fast to update.',
+      'We combine editorial support, distribution strategy, and reporting so your campaigns move faster without sacrificing quality.',
+      'Your release is matched to relevant outlets, then tracked with placement links, visibility metrics, and post-publication evidence.',
+      'The result is a cleaner path to trust, stronger rankings, and measurable authority growth.',
     ],
-    sideBadge: 'What it prioritizes',
+    sideBadge: 'What you get',
     sidePoints: [
-      'Recent posts directly on the homepage.',
-      'Simple archive layout with sidebar search and recent items.',
-      'Readable article pages without comments or extra modules.',
-      'A publishing-first structure that stays easy to maintain.',
+      'Editorially refined press release copy.',
+      'Targeted publication across trusted outlets.',
+      'Backlink and ranking visibility support.',
+      'Verification-ready reporting assets.',
     ],
     primaryLink: {
-      label: 'Open archive',
-      href: '/archive',
+      label: 'Open media distribution',
+      href: '/media-distribution',
     },
     secondaryLink: {
-      label: 'Contact desk',
+      label: 'Contact distribution desk',
       href: '/contact',
     },
   },
   cta: {
-    badge: 'Get in touch',
-    title: 'Use this template when publishing regular updates matters more than visual effects.',
+    badge: 'Need distribution support?',
+    title: 'Launch your next press release with confidence and proof.',
     description:
-      'A straightforward layout for announcements, media coverage, partner updates, and newsroom-style content.',
-    primaryCta: {
-      label: 'Contact us',
-      href: '/contact',
-    },
+      'Get strategy, writing, publication, and reporting support from a team focused on authority-building outcomes.',
+    // primaryCta: {
+      label: 'Get started',
+      href: '/register',
+    // }
+    
     secondaryCta: {
-      label: 'View archive',
-      href: '/archive',
+      label: 'View results',
+      href: '/media-distribution',
     },
   },
-  taskSectionHeading: 'Latest posts',
-  taskSectionDescriptionSuffix: 'Read the newest published updates.',
+  taskSectionHeading: 'Latest distribution updates',
+  taskSectionDescriptionSuffix: 'Read recent publication wins, campaign updates, and reporting insights.',
 } as const
 
 export const taskPageMetadata: Record<Exclude<TaskKey, 'comment' | 'org' | 'social'>, { title: string; description: string }> = {
   article: {
-    title: 'Articles',
-    description: 'Read the latest posts and long-form updates.',
+    title: 'Press & Insights',
+    description: 'Read media strategy insights, publishing updates, and authority-building articles.',
   },
   listing: {
-    title: 'Listings',
-    description: 'Explore listings and directory-style entries.',
+    title: 'Distribution Partners',
+    description: 'Explore partner outlets, publication options, and media categories.',
   },
   classified: {
-    title: 'Classifieds',
-    description: 'Browse classifieds and short-form notices.',
+    title: 'Campaign Notices',
+    description: 'Browse short campaign updates and time-sensitive media notices.',
   },
   image: {
-    title: 'Images',
-    description: 'Browse image-led updates and visual posts.',
+    title: 'Creative Assets',
+    description: 'Review campaign visuals, screenshot proofs, and branded media assets.',
   },
   profile: {
-    title: 'Profiles',
-    description: 'View profile pages and public identities.',
+    title: 'Client Profiles',
+    description: 'View client stories, campaign outcomes, and authority growth snapshots.',
   },
   sbm: {
-    title: 'Bookmarks',
-    description: 'Browse curated resources and saved links.',
+    title: 'Media Resources',
+    description: 'Curated links for PR strategy, SEO, and newsroom best practices.',
   },
   pdf: {
-    title: 'Resources',
-    description: 'Open PDFs and downloadable files.',
+    title: 'Reports & Downloads',
+    description: 'Access downloadable campaign reports, templates, and publication summaries.',
   },
   mediaDistribution: {
-    title: 'Archive',
-    description: 'Browse every published guest post and desk story.',
+    title: 'Media Distribution',
+    description: 'Browse published press releases, distribution outcomes, and report-backed results.',
   },
 }
 
@@ -117,21 +118,21 @@ export const taskIntroCopy: Record<
   TaskKey,
   { title: string; paragraphs: string[]; links: { label: string; href: string }[] }
 > = {
-  listing: { title: 'Listings', paragraphs: ['Directory entries and service pages.'], links: [{ label: 'Home', href: '/' }] },
-  article: { title: 'Articles', paragraphs: ['General long-form article feed.'], links: [{ label: 'Home', href: '/' }] },
-  classified: { title: 'Classifieds', paragraphs: ['Short-form posts and notices.'], links: [{ label: 'Home', href: '/' }] },
-  image: { title: 'Images', paragraphs: ['Image-first posts and galleries.'], links: [{ label: 'Home', href: '/' }] },
-  profile: { title: 'Profiles', paragraphs: ['Profile pages and identity surfaces.'], links: [{ label: 'Home', href: '/' }] },
-  sbm: { title: 'Bookmarks', paragraphs: ['Curated saved links and references.'], links: [{ label: 'Home', href: '/' }] },
-  pdf: { title: 'Resources', paragraphs: ['Downloadable files and documents.'], links: [{ label: 'Home', href: '/' }] },
-  social: { title: 'Social', paragraphs: ['Short updates and activity.'], links: [{ label: 'Home', href: '/' }] },
-  comment: { title: 'Comments', paragraphs: ['Commentary and response posts.'], links: [{ label: 'Home', href: '/' }] },
-  org: { title: 'Organizations', paragraphs: ['Organization pages and entities.'], links: [{ label: 'Home', href: '/' }] },
+  listing: { title: 'Distribution Partners', paragraphs: ['Browse publication partners and trusted media surfaces.'], links: [{ label: 'Home', href: '/' }] },
+  article: { title: 'Press & Insights', paragraphs: ['Media strategy insights and distribution-focused articles.'], links: [{ label: 'Home', href: '/' }] },
+  classified: { title: 'Campaign Notices', paragraphs: ['Short campaign announcements and posting updates.'], links: [{ label: 'Home', href: '/' }] },
+  image: { title: 'Creative Assets', paragraphs: ['Visual proofs, campaign graphics, and release media previews.'], links: [{ label: 'Home', href: '/' }] },
+  profile: { title: 'Client Profiles', paragraphs: ['Client campaigns, milestones, and authority growth highlights.'], links: [{ label: 'Home', href: '/' }] },
+  sbm: { title: 'Media Resources', paragraphs: ['Curated references for PR, SEO, and media outreach workflows.'], links: [{ label: 'Home', href: '/' }] },
+  pdf: { title: 'Reports & Downloads', paragraphs: ['Downloadable campaign reports, templates, and media summaries.'], links: [{ label: 'Home', href: '/' }] },
+  social: { title: 'Social', paragraphs: ['Short social updates tied to distribution campaigns.'], links: [{ label: 'Home', href: '/' }] },
+  comment: { title: 'Comments', paragraphs: ['Feedback and discussion around publication outcomes.'], links: [{ label: 'Home', href: '/' }] },
+  org: { title: 'Organizations', paragraphs: ['Publisher organizations and distribution partners.'], links: [{ label: 'Home', href: '/' }] },
   mediaDistribution: {
-    title: 'Archive',
+    title: 'Media Distribution',
     paragraphs: [
-      'This archive is designed for straightforward publishing: regular updates, announcements, and media-style posts presented in a clean reading format.',
-      'The layout stays simple so visitors can scan headlines quickly, open stories easily, and move through the archive without distraction.',
+      'This section showcases press releases, publication placements, and campaign outcomes from active media distribution projects.',
+      'Use it to track authority growth, review live coverage links, and understand how each campaign performed after distribution.',
     ],
     links: [
       { label: 'Home', href: '/' },
