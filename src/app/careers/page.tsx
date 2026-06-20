@@ -1,68 +1,84 @@
-import Link from "next/link";
-import { PageShell } from "@/components/shared/page-shell";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { SITE_CONFIG } from "@/lib/site-config";
+import Link from 'next/link'
+import { BriefcaseBusiness, Mail, UserRoundSearch } from 'lucide-react'
+import { NavbarShell } from '@/components/shared/navbar-shell'
+import { Footer } from '@/components/shared/footer'
+import { SITE_CONFIG } from '@/lib/site-config'
 
-const roles = [
-  { title: "Product Designer", location: "Remote", type: "Full-time", level: "Mid" },
-  { title: "Frontend Engineer", location: "New York, NY", type: "Full-time", level: "Senior" },
-  { title: "Community Lead", location: "Remote", type: "Part-time", level: "Mid" },
-];
-
-const benefits = [
-  "Flexible schedules and remote-first culture",
-  "Health, dental, and vision coverage",
-  "Annual learning stipend",
-  "Quarterly offsites and team retreats",
-];
+const futureRoles = [
+  'Editorial operations',
+  'Media outreach and partnerships',
+  'Campaign strategy and reporting',
+]
 
 export default function CareersPage() {
   return (
-    <PageShell
-      title="Careers"
-      description={`Help us build the future of community-driven publishing at ${SITE_CONFIG.name}.`}
-      actions={
-        <Button asChild>
-          <Link href="/contact">Apply Now</Link>
-        </Button>
-      }
-    >
-      <div className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-        <div className="space-y-4">
-          {roles.map((role) => (
-            <Card key={role.title} className="border-border bg-card">
-              <CardContent className="p-6">
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary">{role.level}</Badge>
-                  <Badge variant="outline">{role.type}</Badge>
-                </div>
-                <h2 className="mt-3 text-lg font-semibold text-foreground">{role.title}</h2>
-                <p className="mt-1 text-sm text-muted-foreground">{role.location}</p>
-                <Button variant="outline" className="mt-4" asChild>
-                  <Link href="/contact">View Role</Link>
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        <Card className="border-border bg-card">
-          <CardContent className="p-6">
-            <h3 className="text-lg font-semibold text-foreground">Why {SITE_CONFIG.name}</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
-              We are building a product that helps people discover and share the best knowledge on the web.
+    <div className="min-h-screen bg-[#f3f4f7] text-[#0f1220]">
+      <NavbarShell />
+      <main>
+        <section className="relative overflow-hidden border-b border-[#dde1ec] bg-gradient-to-br from-[#ffffff] via-[#f4f2ff] to-[#eef1fb] py-16 sm:py-20">
+          <div className="pointer-events-none absolute -right-24 top-0 h-72 w-72 rounded-full bg-[#4e16bc]/10 blur-3xl" aria-hidden />
+          <div className="relative mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <p className="text-xs font-bold uppercase tracking-[0.32em] text-[#4e16bc]">Careers at {SITE_CONFIG.name}</p>
+            <h1 className="mt-4 text-4xl font-black uppercase leading-[0.95] tracking-tight text-[#141a2a] sm:text-5xl lg:text-6xl">
+              We are not hiring right now.
+            </h1>
+            <p className="mt-6 max-w-3xl text-base leading-relaxed text-[#465065] sm:text-lg">
+              We are currently not hiring for active roles. You can still share your profile and details,
+              and our team will review future-fit candidates as openings become available.
             </p>
-            <div className="mt-4 space-y-2 text-sm text-muted-foreground">
-              {benefits.map((benefit) => (
-                <div key={benefit} className="rounded-md border border-border bg-secondary/40 px-3 py-2">
-                  {benefit}
-                </div>
-              ))}
+            <div className="mt-8 flex flex-wrap gap-3">
+              <Link href="/contact" className="inline-flex items-center rounded-full bg-[#4e16bc] px-6 py-3 text-xs font-bold uppercase tracking-[0.12em] text-white hover:bg-[#3f11a1]">
+                Send Details via Contact Page
+              </Link>
             </div>
-          </CardContent>
-        </Card>
-      </div>
-    </PageShell>
-  );
+          </div>
+        </section>
+
+        <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6 lg:px-8">
+          <div className="grid gap-6 md:grid-cols-2">
+            <article className="rounded-[1.5rem] border border-[#d7dceb] bg-white p-7 shadow-[0_10px_24px_rgba(22,30,48,0.08)]">
+              <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-[#1e2638]">
+                <UserRoundSearch className="h-6 w-6 text-[#4e16bc]" />
+                How to share your profile
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm text-[#4a5266]">
+                <li>Include your full name, preferred role, and relevant experience.</li>
+                <li>Add your portfolio, LinkedIn, or work samples where possible.</li>
+                <li>Mention location, availability, and any domain specialization.</li>
+              </ul>
+            </article>
+
+            <article className="rounded-[1.5rem] border border-[#d7dceb] bg-white p-7 shadow-[0_10px_24px_rgba(22,30,48,0.08)]">
+              <h2 className="flex items-center gap-2 text-2xl font-black uppercase tracking-tight text-[#1e2638]">
+                <BriefcaseBusiness className="h-6 w-6 text-[#4e16bc]" />
+                Roles we may open next
+              </h2>
+              <div className="mt-5 grid gap-3">
+                {futureRoles.map((role) => (
+                  <div key={role} className="rounded-xl border border-[#e1e5f1] bg-[#f6f7fc] px-4 py-3 text-sm text-[#2e3648]">
+                    {role}
+                  </div>
+                ))}
+              </div>
+              <p className="mt-5 text-sm text-[#4a5266]">
+                We will reach out directly if your profile matches upcoming openings.
+              </p>
+            </article>
+          </div>
+
+          <div className="mt-8 rounded-[1.5rem] border border-[#d7dceb] bg-white p-6 shadow-[0_10px_24px_rgba(22,30,48,0.08)]">
+            <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-[0.16em] text-[#4e16bc]">
+              <Mail className="h-4 w-4" />
+              Contact Channel
+            </p>
+            <p className="mt-2 text-sm text-[#4a5266]">
+              Please send your details through the <Link href="/contact" className="font-semibold text-[#4e16bc] hover:underline">Contact page</Link> so our team can track and review your information properly.
+            </p>
+          </div>
+        </section>
+      </main>
+      <Footer />
+    </div>
+  )
 }
+

@@ -73,7 +73,7 @@
 @theme inline {
   --font-sans: var(--site-font-sans), var(--font-manrope), system-ui, sans-serif;
   --font-mono: var(--site-font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-display: var(--site-font-display), var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-display: var(--site-font-sans), var(--font-manrope), system-ui, sans-serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -149,8 +149,8 @@
   h2,
   h3,
   h4 {
-    font-family: var(--font-display);
-    letter-spacing: -0.03em;
+    font-family: var(--font-sans);
+    letter-spacing: -0.02em;
   }
 
   p,

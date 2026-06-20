@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, type CSSProperties, type HTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
@@ -16,26 +17,25 @@ type ContentImageProps = Omit<HTMLAttributes<HTMLDivElement>, "role" | "aria-lab
   fetchPriority?: "high" | "low" | "auto";
 };
 
-/** Visual surface only — no network images (site-wide text-first layout). */
 export function ContentImage({
-  src: _src,
+  src,
   alt,
   fill,
   className,
   style,
-  priority: _priority,
-  intrinsicWidth: _intrinsicWidth,
-  intrinsicHeight: _intrinsicHeight,
-  sizes: _sizes,
-  loading: _loading,
-  fetchPriority: _fetchPriority,
+  priority,
+  quality,
+  intrinsicWidth,
+  intrinsicHeight,
+  sizes,
+  loading,
+  fetchPriority,
   ...rest
 }: ContentImageProps) {
   const resolvedStyle = useMemo<CSSProperties>(() => {
     if (!fill) return style || {};
     return {
-      position: "absolute",
-      inset: 0,
+      position: "relative",
       width: "100%",
       height: "100%",
       ...style,
@@ -43,17 +43,54 @@ export function ContentImage({
   }, [fill, style]);
 
   const decorative = !alt.trim();
+
+  if (!src) {
+    return (
+      <div
+        {...rest}
+        role={decorative ? "presentation" : undefined}
+        aria-hidden={decorative ? true : undefined}
+        aria-label={decorative ? undefined : alt}
+        className={cn(
+          "pointer-events-none select-none bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950",
+          className,
+        )}
+        style={resolvedStyle}
+      />
+    );
+  }
+
+  if (fill) {
+    return (
+      <div {...rest} className="absolute inset-0 h-full w-full" style={style}>
+        <Image
+          src={src}
+          alt={alt}
+          fill
+          priority={priority}
+          sizes={sizes}
+          quality={quality || 75}
+          className={cn("object-cover", className)}
+          loading={loading}
+          fetchPriority={fetchPriority}
+        />
+      </div>
+    );
+  }
+
   return (
-    <div
-      {...rest}
-      role={decorative ? "presentation" : undefined}
-      aria-hidden={decorative ? true : undefined}
-      aria-label={decorative ? undefined : alt}
-      className={cn(
-        "pointer-events-none select-none bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950",
-        className,
-      )}
-      style={resolvedStyle}
-    />
+    <div {...rest} className={cn("relative", className)} style={resolvedStyle}>
+      <Image
+        src={src}
+        alt={alt}
+        width={intrinsicWidth || 800}
+        height={intrinsicHeight || 600}
+        priority={priority}
+        sizes={sizes}
+        quality={quality || 75}
+        loading={loading}
+        fetchPriority={fetchPriority}
+      />
+    </div>
   );
 }

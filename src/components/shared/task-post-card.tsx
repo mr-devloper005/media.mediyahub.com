@@ -6,6 +6,8 @@ import type { TaskKey } from '@/lib/site-config'
 import { SITE_THEME } from '@/config/site.theme'
 import { getFactoryState } from '@/design/factory/get-factory-state'
 import { TASK_POST_CARD_OVERRIDE_ENABLED, TaskPostCardOverride } from '@/overrides/task-post-card'
+import { ContentImage } from '@/components/shared/content-image'
+import { getPostImages } from '@/lib/task-data'
 
 type ListingContent = {
   location?: string
@@ -27,6 +29,12 @@ const getExcerpt = (value?: string | null, maxLength = 140) => {
   if (!text) return ''
   if (text.length <= maxLength) return text
   return `${text.slice(0, maxLength).trimEnd()}…`
+}
+
+const isPlaceholderLikeImage = (value?: string | null) => {
+  if (!value) return true
+  const normalized = value.toLowerCase()
+  return normalized.includes('placeholder') || normalized.includes('picsum.photos/seed/media-distribution')
 }
 
 const getContent = (post: SitePost): ListingContent => {
@@ -86,9 +94,42 @@ export function TaskPostCard({
   const visualVariant = cardStyles[getVariantForTask(variant)]
   const isBookmarkVariant = variant === 'sbm' || variant === 'social'
   const imageAspect = variant === 'image' ? 'aspect-[4/5]' : variant === 'article' ? 'aspect-[16/10]' : variant === 'pdf' ? 'aspect-[4/5]' : variant === 'classified' ? 'aspect-[16/11]' : 'aspect-[4/3]'
+  const images = getPostImages(post)
+  const primaryImage = images[0] || '/placeholder.svg'
+  const hasRealCover = !isPlaceholderLikeImage(primaryImage)
   const { recipe } = getFactoryState()
   const isDirectoryProduct = recipe.homeLayout === 'listing-home' || recipe.homeLayout === 'classified-home'
   const isDirectorySurface = isDirectoryProduct && (variant === 'listing' || variant === 'classified' || variant === 'profile')
+  const isMediaDistribution = variant === 'mediaDistribution'
+
+  if (isMediaDistribution) {
+    return (
+      <Link href={href} className={`group flex h-full overflow-hidden transition duration-300 ${visualVariant.frame}`}>
+        {hasRealCover ? (
+          <div className="relative hidden w-[38%] min-w-[220px] overflow-hidden bg-zinc-900 sm:block">
+            <ContentImage src={primaryImage} alt={post.title} fill className="object-cover transition duration-500 group-hover:scale-105" />
+          </div>
+        ) : null}
+        <div className="flex min-w-0 flex-1 flex-col p-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${visualVariant.badge}`}>
+              <Tag className="h-3.5 w-3.5" />
+              {category}
+            </span>
+          </div>
+          <div className="mt-4 flex items-start justify-between gap-3">
+            <h3 className={`line-clamp-2 text-xl font-semibold leading-snug ${visualVariant.title}`}>{post.title}</h3>
+            <ArrowUpRight className={`mt-1 h-5 w-5 shrink-0 ${visualVariant.muted}`} />
+          </div>
+          <p className={`mt-3 line-clamp-4 text-sm leading-7 ${visualVariant.muted}`}>{getExcerpt(content.description || post.summary, 220) || 'Explore this post.'}</p>
+          <div className="mt-4 flex flex-wrap gap-3 text-xs">
+            {content.location ? <span className={`inline-flex items-center gap-1 ${visualVariant.muted}`}><MapPin className="h-3.5 w-3.5" />{content.location}</span> : null}
+            {content.email ? <span className={`inline-flex items-center gap-1 ${visualVariant.muted}`}><Mail className="h-3.5 w-3.5" />{content.email}</span> : null}
+          </div>
+        </div>
+      </Link>
+    )
+  }
 
   if (isDirectorySurface) {
     const cardTone = recipe.brandPack === 'market-utility'
@@ -110,6 +151,8 @@ export function TaskPostCard({
     return (
       <Link href={href} className={`group flex h-full flex-col overflow-hidden transition duration-300 ${cardTone.frame}`}>
         <div className="relative aspect-[16/11] overflow-hidden bg-gradient-to-br from-slate-800 to-slate-950">
+          <ContentImage src={primaryImage} alt={post.title} fill className="object-cover transition duration-500 group-hover:scale-105" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-black/10 to-transparent" />
           <div className="absolute inset-x-0 top-0 flex items-center justify-between p-4">
             <span className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${cardTone.badge}`}>
               <Tag className="h-3.5 w-3.5" />
@@ -161,6 +204,7 @@ export function TaskPostCard({
   return (
     <Link href={href} className={`group flex h-full flex-col overflow-hidden transition duration-300 ${visualVariant.frame}`}>
       <div className={`relative ${imageAspect} overflow-hidden bg-gradient-to-br from-zinc-800 via-zinc-900 to-zinc-950`} aria-hidden>
+        <ContentImage src={primaryImage} alt={post.title} fill className="object-cover transition duration-500 group-hover:scale-105" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-80" />
         <span className={`absolute left-4 top-4 inline-flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] ${visualVariant.badge}`}>
           <Tag className="h-3.5 w-3.5" />

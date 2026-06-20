@@ -11,7 +11,7 @@ import { SITE_CONFIG } from '@/lib/site-config'
 import { formatRichHtml, RichContent } from '@/components/shared/rich-content'
 import { CATEGORY_OPTIONS, normalizeCategory } from '@/lib/categories'
 
-export const TASK_DETAIL_PAGE_OVERRIDE_ENABLED = true
+export const TASK_DETAIL_PAGE_OVERRIDE_ENABLED = false
 
 const isValidImageUrl = (value?: string | null) =>
   typeof value === 'string' && (value.startsWith('/') || /^https?:\/\//i.test(value))
